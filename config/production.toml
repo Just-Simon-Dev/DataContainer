@@ -1,0 +1,11 @@
+[database]
+# Use production database configuration
+host = "production_db_host"
+port = 5432
+username = "prod_user"
+password = "prod_password"
+
+[server]
+# Use production server settings
+host = "0.0.0.0"
+port = 80

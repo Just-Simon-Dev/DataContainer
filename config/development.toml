@@ -1,0 +1,11 @@
+[database]
+# Use a different database configuration for development
+host = "localhost"
+port = 5432
+username = "dev_user"
+password = "dev_password"
+
+[server]
+# Use different server settings for development if needed
+host = "127.0.0.1"
+port = 8080
