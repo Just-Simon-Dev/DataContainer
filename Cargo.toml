@@ -6,11 +6,12 @@ edition = "2021"
 [dependencies]
 actix-web = "4.0"
 serde = { version = "1.0", features = ["derive"] }
-sqlparser = "0.12"
+sqlparser = "0.47.0"
 tokio = { version = "1", features = ["full"] }
 log = "0.4"
-env_logger = "0.9"
-config = "0.11"
-redis = "0.22"
+env_logger = "0.11.3"
+config = "0.14.0"
+redis = "0.25.4"
 lapin = "2.0" # For RabbitMQ
-rdkafka = "0.27" # For Kafka
+rdkafka = "0.36.2" # For Kafka
+toml = "0.8.13"

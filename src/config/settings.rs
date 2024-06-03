@@ -1,3 +1,6 @@
+use std::fs;
+use std::process::exit;
+use config::FileFormat::Toml;
 use serde::{Deserialize, Serialize};
 
 // Define a struct to hold your application settings
@@ -9,7 +12,7 @@ pub struct Settings {
 
 #[derive(Debug, Deserialize, Serialize)]
 pub struct EnvironmentalSettings{
-    pub is_prod: bool
+    pub is_prod: String
 }
 
 // Define a struct to hold database connection settings
@@ -31,18 +34,45 @@ pub struct ServerSettings {
 }
 
 // Implement a function to load settings from a configuration file
-pub fn load_settings() -> Result<Settings, config::ConfigError> {
-    let mut envConfig = config::Config::default();
-    envConfig.merge(config::File::with_name("config/env"))?;
-    let env:EnvironmentalSettings = envConfig.try_into().unwrap();
+pub fn load_settings() -> Settings {
+    // load the env file to check what env it is
+
+    let contents = match fs::read_to_string("config/env.toml") {
+        // If successful return the files text as `contents`.
+        // `c` is a local variable.
+        Ok(c) => c,
+        // Handle the `error` case.
+        Err(_) => {
+            // Write `msg` to `stderr`.
+            eprintln!("Could not read file `{}`", "config/env.toml");
+            // Exit the program with exit code `1`.
+            exit(1);
+        }
+    };
+
+    let decoder = toml::Deserializer::new(&*contents);
+    let env_config = EnvironmentalSettings::deserialize(decoder).unwrap();
     
+    let mut filename: &str = "config/production.toml";
     
-    let mut config = config::Config::default();
-    config.merge(config::File::with_name("config/default"))?;
-    if env.is_prod {
-        config.merge(config::File::with_name("config/production").required(false))?;
-    } else {
-        config.merge(config::File::with_name("config/development").required(false))?;
+    if env_config.is_prod == "false" {
+        filename = "config/development.toml";
     }
-    config.try_into()
+
+    let contents = match fs::read_to_string(filename) {
+        // If successful return the files text as `contents`.
+        // `c` is a local variable.
+        Ok(c) => c,
+        // Handle the `error` case.
+        Err(_) => {
+            // Write `msg` to `stderr`.
+            eprintln!("Could not read file `{}`", filename);
+            // Exit the program with exit code `1`.
+            exit(1);
+        }
+    };
+
+    let decoder = toml::Deserializer::new(&*contents);
+    let config = Settings::deserialize(decoder).unwrap();
+    return config;
 }
