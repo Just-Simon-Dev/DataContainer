@@ -2,8 +2,7 @@ mod config;
 mod api;
 pub(crate) mod sql;
 
-use actix_web::{web, App, HttpServer, Responder, HttpResponse};
-use serde::{Deserialize, Serialize};
+use actix_web::{App, HttpServer};
 use log::info;
 use config::settings;
 use std::env;

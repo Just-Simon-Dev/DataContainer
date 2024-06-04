@@ -1,6 +1,5 @@
 use std::fs;
 use std::process::exit;
-use config::FileFormat::Toml;
 use serde::{Deserialize, Serialize};
 
 // Define a struct to hold your application settings

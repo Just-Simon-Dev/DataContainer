@@ -11,5 +11,8 @@ pub fn configure_routes(cfg: &mut web::ServiceConfig) {
     ).service(
         web::resource("/echo")
             .route(web::post().to(echo))
+    ).service(
+        web::resource("/get")
+            .route(web::get().to(data_selection))
     );
 }

@@ -1,32 +1,32 @@
-use actix_web::{web, HttpResponse, Result, Responder};
-use serde::{Deserialize, Serialize};
+use actix_web::{web, HttpResponse, Responder};
+use sqlparser::dialect::MySqlDialect;
+use crate::sql::parser::request_to_ast_translation;
+use std::string::ToString;
+use crate::api::requests::DataSelectionRequest;
 
-// Define request and response structs
-// #[derive(Debug, Deserialize)]
-// pub struct MyRequest {
-//     // Define request parameters
-// }
-// 
-// #[derive(Debug, Serialize)]
-// pub struct MyResponse {
-//     // Define response data
-// }
-// 
-// // Define request handler functions
-// pub async fn handle_my_request(req: web::Json<MyRequest>) -> Result<HttpResponse> {
-//     // Process request and generate response
-//     let response = MyResponse {
-//         // Populate response fields
-//     };
-// 
-//     // Return HTTP response with JSON body
-//     Ok(HttpResponse::Ok().json(response))
-// }
+// Define request handler functions
+pub async fn data_selection(req: web::Json<DataSelectionRequest>) -> impl Responder {
+    let dialect = MySqlDialect {};
 
-pub  async fn index() -> impl Responder {
+    let data = DataSelectionRequest {
+        select_columns: req.select_columns.to_string(),
+        tables: req.tables.to_string(),
+        where_conditions: req.where_conditions.to_string(),
+    };
+
+    // Process request and generate response
+    request_to_ast_translation(data, &dialect);
+
+    let data: [String; 0] = [];
+
+    // Return HTTP response with JSON body
+    HttpResponse::Ok().json(data)
+}
+
+pub async fn index() -> impl Responder {
     HttpResponse::Ok().body("Hello, World!")
 }
 
-pub  async fn echo(req_body: String) -> impl Responder {
+pub async fn echo(req_body: String) -> impl Responder {
     HttpResponse::Ok().body(req_body)
 }
