@@ -3,6 +3,7 @@ use sqlparser::dialect::MySqlDialect;
 use crate::sql::parser::request_to_ast_translation;
 use std::string::ToString;
 use crate::api::requests::DataSelectionRequest;
+use crate::sql::optimizer::generate_plans;
 
 // Define request handler functions
 pub async fn data_selection(req: web::Json<DataSelectionRequest>) -> impl Responder {
@@ -15,8 +16,10 @@ pub async fn data_selection(req: web::Json<DataSelectionRequest>) -> impl Respon
     };
 
     // Process request and generate response
-    request_to_ast_translation(data, &dialect);
-
+    let ast_expression = request_to_ast_translation(data, dialect);
+    generate_plans(ast_expression);
+    
+    
     let data: [String; 0] = [];
 
     // Return HTTP response with JSON body

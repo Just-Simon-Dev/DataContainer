@@ -4,7 +4,7 @@ use sqlparser::ast::{
 use sqlparser::dialect::Dialect;
 use sqlparser::parser::Parser;
 use sqlparser::tokenizer::Tokenizer;
-use crate::api::handlers::DataSelectionRequest;
+use crate::api::requests::DataSelectionRequest;
 
 pub fn sql_to_ast_translation(sql_query: &str, dialect: &impl Dialect) -> Vec<Statement> {
     Parser::parse_sql(dialect, sql_query).unwrap()
