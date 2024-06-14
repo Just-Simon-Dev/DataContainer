@@ -17,7 +17,7 @@ pub async fn data_selection(req: web::Json<DataSelectionRequest>) -> impl Respon
 
     // Process request and generate response
     let ast_expression = request_to_ast_translation(data, dialect);
-    generate_plans(ast_expression);
+    let plan = generate_plans(ast_expression);
     
     
     let data: [String; 0] = [];
